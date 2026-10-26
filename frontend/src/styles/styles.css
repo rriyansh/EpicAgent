@@ -1227,3 +1227,16 @@ input, textarea, select {
   color: var(--text-2);
 }
 .btn-ghost:hover { background: var(--surface-2); }
+
+/* Streamlined personalization and chat workspace */
+.onb-meta { display: none; }
+.onb-step { margin-top: clamp(2rem, 14vh, 9rem); }
+.dash { background: linear-gradient(135deg, var(--surface) 0%, var(--surface-2) 100%); }
+.topbar { height: 4.25rem; padding: 0 1.5rem; background: color-mix(in srgb, var(--surface) 92%, transparent); backdrop-filter: blur(14px); }
+.topbar-title h1 { font-size: 1.05rem; font-weight: 700; }.topbar-title p { font-size: .75rem; }
+.chat-scroll { padding: 2rem clamp(1rem, 5vw, 5rem); gap: 1.6rem; background: radial-gradient(circle at 75% 0%, var(--accent-soft), transparent 30%); }
+.msg-row { max-width: min(78%, 760px); gap: .85rem; }.msg-avatar { width: 2.35rem; height: 2.35rem; box-shadow: 0 5px 14px var(--accent-glow); }.msg-who { margin-bottom: .4rem; font-weight: 700; }
+.msg-content { font-size: .97rem; line-height: 1.7; }.msg-row.ai .msg-content { background: var(--surface); border-radius: 4px 18px 18px 18px; padding: 1rem 1.1rem; box-shadow: var(--shadow-sm); }.msg-row.user .msg-content { border-radius: 18px 4px 18px 18px; padding: .85rem 1.1rem; box-shadow: 0 8px 20px var(--accent-glow); }
+.empty-chat { max-width: 680px; margin: auto; background: color-mix(in srgb, var(--surface) 82%, transparent); border: 1px solid var(--border); border-radius: 28px; padding: clamp(2rem, 5vw, 4rem); box-shadow: var(--shadow-sm); }.empty-chat h2 { color: var(--text); font-size: clamp(1.65rem, 3vw, 2.35rem); }.empty-chat p { max-width: 34rem; }.suggestion-list { display: grid; grid-template-columns: repeat(3, 1fr); max-width: 100%; gap: .75rem; }.suggestion { min-height: 88px; border-radius: 14px; background: var(--surface); padding: 1rem; }.suggestion:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+.composer { padding: 1rem clamp(1rem, 5vw, 5rem) calc(1rem + var(--safe-bottom)); background: color-mix(in srgb, var(--surface) 94%, transparent); backdrop-filter: blur(14px); }.composer-inner { border-radius: 18px; padding: .45rem .5rem .45rem 1rem; box-shadow: var(--shadow-sm); }.composer-btn.send { width: 2.65rem; height: 2.65rem; border-radius: 13px; background: linear-gradient(135deg, var(--accent), var(--accent-2)); }.composer-foot { padding: 0 .35rem; }
+@media (max-width: 768px) { .topbar { padding: 0 1rem; }.chat-scroll { padding: 1rem; }.msg-row { max-width: 94%; }.suggestion-list { grid-template-columns: 1fr; }.suggestion { min-height: auto; }.composer { padding: .75rem 1rem calc(.75rem + var(--safe-bottom)); } }

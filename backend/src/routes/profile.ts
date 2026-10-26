@@ -19,6 +19,7 @@ const ProfileSchema = z.object({
   volume: z.number().int().min(0).max(100).optional(),
   provider: z.enum(['gemini', 'openai', 'deepseek', 'anthropic']).optional(),
   temperature: z.number().min(0).max(2).optional(),
+  onboarding_complete: z.number().int().min(0).max(1).optional(),
 });
 
 router.get('/', requireAuth, (req: AuthedRequest, res) => {

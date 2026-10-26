@@ -26,7 +26,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const data = await apiGet<{ user: User; profile: Profile }>('/auth/me');
       setUser(data.user);
       setProfile(data.profile);
-      setNeedsOnboarding(!data.profile?.dob);
+      setNeedsOnboarding(!data.profile?.onboarding_complete);
     } catch {
       setUser(null);
       setProfile(null);

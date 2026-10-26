@@ -74,8 +74,8 @@ router.post('/login', async (req, res, next) => {
     const ok = await bcrypt.compare(password, user.password_hash);
     if (!ok) return res.status(401).json({ error: 'Invalid credentials' });
 
-    const profile = db.prepare('SELECT dob FROM profiles WHERE user_id = ?').get(user.id) as { dob: string | null } | undefined;
-    const needsOnboarding = !profile || !profile.dob;
+    const profile = db.prepare('SELECT onboarding_complete FROM profiles WHERE user_id = ?').get(user.id) as { onboarding_complete: number } | undefined;
+    const needsOnboarding = !profile || !profile.onboarding_complete;
 
     return res.json({
       access: signAccess(user.id),
@@ -178,8 +178,8 @@ router.get('/google/callback', async (req, res, next) => {
       user = db.prepare('SELECT * FROM users WHERE id = ?').get(id) as UserRow;
     }
 
-    const profile = db.prepare('SELECT dob FROM profiles WHERE user_id = ?').get(user.id) as { dob: string | null } | undefined;
-    const needsOnboarding = !profile || !profile.dob;
+    const profile = db.prepare('SELECT onboarding_complete FROM profiles WHERE user_id = ?').get(user.id) as { onboarding_complete: number } | undefined;
+    const needsOnboarding = !profile || !profile.onboarding_complete;
 
     const params = new URLSearchParams({
       access: signAccess(user.id),

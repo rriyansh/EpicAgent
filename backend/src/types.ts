@@ -28,6 +28,7 @@ export interface ProfileRow {
   volume: number;
   provider: string;
   temperature: number;
+  onboarding_complete: number;
   updated_at: number;
 }
 

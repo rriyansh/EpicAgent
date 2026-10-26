@@ -33,6 +33,7 @@ CREATE TABLE IF NOT EXISTS profiles (
   volume INTEGER NOT NULL DEFAULT 80,
   provider TEXT NOT NULL DEFAULT 'gemini',
   temperature REAL NOT NULL DEFAULT 0.7,
+  onboarding_complete INTEGER NOT NULL DEFAULT 0,
   updated_at INTEGER NOT NULL
 );
 
@@ -64,5 +65,8 @@ CREATE TABLE IF NOT EXISTS messages (
 
 CREATE INDEX IF NOT EXISTS idx_messages_user ON messages(user_id, created_at);
 `);
+
+// Keep existing local databases compatible with the onboarding completion flow.
+try { db.exec('ALTER TABLE profiles ADD COLUMN onboarding_complete INTEGER NOT NULL DEFAULT 0'); } catch {}
 
 export default db;

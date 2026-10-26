@@ -17,6 +17,7 @@ export interface Profile {
   volume: number;
   provider: string;
   temperature: number;
+  onboarding_complete: number;
 }
 
 export interface ApiKey {
