@@ -12,15 +12,16 @@ interface Props {
   onLogout: () => void;
   onOpenTerminal?: () => void;
   device: DeviceInfo;
+  avatar?: string | null;
 }
 
-export default function Sidebar({ open, onClose, user, onNewSession, onOpenSettings, onLogout, onOpenTerminal, device }: Props) {
+export default function Sidebar({ open, onClose, user, onNewSession, onOpenSettings, onLogout, onOpenTerminal, device, avatar }: Props) {
   const initial = (user?.name || user?.email || 'E').charAt(0).toUpperCase();
 
   return (
     <aside className={`sidebar ${open ? 'open' : ''}`}>
       <div className="sb-head">
-        <div className="sb-avatar">{initial}</div>
+        <div className={`sb-avatar ${avatar ? 'has-image' : ''}`} style={avatar ? { backgroundImage: `url(${avatar})` } : undefined}>{avatar ? null : initial}</div>
         <div className="sb-name">
           <strong>{user?.name || 'Epic user'}</strong>
           <span>{device.os} · {device.browser}</span>
@@ -50,7 +51,7 @@ export default function Sidebar({ open, onClose, user, onNewSession, onOpenSetti
 
       <div className="sb-foot">
         <button className="sb-profile" onClick={onOpenSettings}>
-          <div className="sb-avatar" style={{ width: '2rem', height: '2rem', fontSize: '.8rem' }}>{initial}</div>
+          <div className={`sb-avatar ${avatar ? 'has-image' : ''}`} style={avatar ? { width: '2rem', height: '2rem', fontSize: '.8rem', backgroundImage: `url(${avatar})` } : { width: '2rem', height: '2rem', fontSize: '.8rem' }}>{avatar ? null : initial}</div>
           <div className="sb-profile-info">
             <strong>{user?.name || 'Epic user'}</strong>
             <span>{user?.email}</span>

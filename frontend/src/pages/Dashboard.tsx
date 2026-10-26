@@ -22,6 +22,8 @@ export default function Dashboard() {
   const [currentProvider, setCurrentProvider] = useState(profile?.provider || 'gemini');
   const [toast, setToast] = useState<{ msg: string; type: 'success' | 'error' | '' } | null>(null);
   const [voiceOptions, setVoiceOptions] = useState<SpeechSynthesisVoice[]>([]);
+  const [avatar, setAvatar] = useState<string | null>(() => localStorage.getItem('epic.avatar'));
+  const [backgroundImage, setBackgroundImage] = useState<string | null>(() => localStorage.getItem('epic.chat-background'));
 
   function showToast(msg: string, type: 'success' | 'error' | '' = '') {
     setToast({ msg, type });
@@ -165,10 +167,13 @@ export default function Dashboard() {
   }
 
   const isDesktop = device.isDesktop;
+  function handleImageUpload(kind: 'avatar' | 'background', file?: File) { if (!file) return; if (!file.type.startsWith('image/')) return showToast('Please choose an image file.', 'error'); if (file.size > 3 * 1024 * 1024) return showToast('Choose an image smaller than 3 MB.', 'error'); const reader = new FileReader(); reader.onload = () => { const image = String(reader.result); const key = kind === 'avatar' ? 'epic.avatar' : 'epic.chat-background'; localStorage.setItem(key, image); if (kind === 'avatar') setAvatar(image); else setBackgroundImage(image); showToast('Image saved', 'success'); }; reader.readAsDataURL(file); }
+  function removeImage(kind: 'avatar' | 'background') { localStorage.removeItem(kind === 'avatar' ? 'epic.avatar' : 'epic.chat-background'); if (kind === 'avatar') setAvatar(null); else setBackgroundImage(null); }
 
   return (
     <div className="dash">
       <div className="wallpaper-layer" />
+      {backgroundImage && <div className="chat-image-background" style={{ backgroundImage: `url(${backgroundImage})` }} />}
 
       <Sidebar
         open={sidebarOpen}
@@ -179,6 +184,7 @@ export default function Dashboard() {
         onLogout={logout}
         onOpenTerminal={isDesktop ? () => setTerminalOpen(true) : undefined}
         device={device}
+        avatar={avatar}
       />
 
       <div className="main-col">
@@ -238,6 +244,14 @@ export default function Dashboard() {
                     </button>
                   ))}
                 </div>
+                <label className="upload-control">Choose chat background<input type="file" accept="image/*" onChange={e => handleImageUpload('background', e.target.files?.[0])} /></label>
+                {backgroundImage && <button className="text-action" type="button" onClick={() => removeImage('background')}>Remove background</button>}
+              </div>
+
+              <div className="drawer-sec">
+                <h3>Profile photo</h3>
+                <label className="upload-control">Choose avatar image<input type="file" accept="image/*" onChange={e => handleImageUpload('avatar', e.target.files?.[0])} /></label>
+                {avatar && <button className="text-action" type="button" onClick={() => removeImage('avatar')}>Remove profile photo</button>}
               </div>
 
               <div className="drawer-sec">
