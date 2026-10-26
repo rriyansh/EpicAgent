@@ -1,6 +1,9 @@
 import crypto from 'crypto';
 
 const KEY_HEX = process.env.ENCRYPTION_KEY || '';
+if (KEY_HEX.length < 64 && process.env.NODE_ENV === 'production') {
+  throw new Error('ENCRYPTION_KEY must be a 32-byte hex key in production');
+}
 if (KEY_HEX.length < 64) {
   console.warn('[crypto] ENCRYPTION_KEY missing or too short — using insecure dev key. Set ENCRYPTION_KEY in .env before production.');
 }

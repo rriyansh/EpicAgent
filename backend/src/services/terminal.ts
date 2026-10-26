@@ -23,9 +23,6 @@ const VALIDATORS: Record<string, Validator> = {
   'pwd': (a) => a.length === 0,
   'whoami': (a) => a.length === 0,
   'echo': (a) => a.every(x => /^[\w\s.,!?:-]+$/.test(x)),
-  'cat': (a) => a.length === 1 && SAFE_TOKEN.test(a[0]),
-  'mkdir': (a) => a.length === 1 && SAFE_TOKEN.test(a[0]),
-  'touch': (a) => a.length === 1 && SAFE_TOKEN.test(a[0]),
   'python': (a) =>
     a.length === 0 ||
     a[0] === '--version' ||
@@ -34,12 +31,8 @@ const VALIDATORS: Record<string, Validator> = {
     a.length === 0 ||
     a[0] === '--version' ||
     (a[0] === '-m' && a.length === 2 && SAFE_MODULE.test(a[1])),
-  'pip': (a) =>
-    (a[0] === 'list' && a.length === 1) ||
-    (a[0] === 'install' && a.length >= 2 && a.slice(1).every(x => SAFE_PKG.test(x))),
-  'pip3': (a) =>
-    (a[0] === 'list' && a.length === 1) ||
-    (a[0] === 'install' && a.length >= 2 && a.slice(1).every(x => SAFE_PKG.test(x))),
+  'pip': (a) => a[0] === 'list' && a.length === 1,
+  'pip3': (a) => a[0] === 'list' && a.length === 1,
   'node': (a) => a.length === 0 || a[0] === '--version',
   'npm': (a) => a[0] === '--version' || a[0] === 'list',
   'git': (a) => (a[0] === 'status' || a[0] === 'log') && a.length === 1,

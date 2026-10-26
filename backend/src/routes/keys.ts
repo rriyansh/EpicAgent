@@ -11,8 +11,8 @@ const router = Router();
 
 const AddKeySchema = z.object({
   provider: z.enum(['gemini', 'openai', 'deepseek', 'anthropic']),
-  key: z.string().min(8).max(500),
-  label: z.string().max(80).optional(),
+  key: z.string().trim().min(12).max(500),
+  label: z.string().trim().max(80).optional(),
 });
 
 router.get('/', requireAuth, (req: AuthedRequest, res) => {
@@ -43,11 +43,13 @@ router.post('/', requireAuth, (req: AuthedRequest, res) => {
   if (!parsed.success) return res.status(400).json({ error: 'Invalid key data' });
   const { provider, key, label } = parsed.data;
 
+  const count = db.prepare('SELECT COUNT(*) AS count FROM api_keys WHERE user_id = ? AND provider = ?').get(req.user!.id, provider) as { count: number };
+  if (count.count >= 10) return res.status(400).json({ error: 'Maximum of 10 keys per provider' });
   const id = randomId();
   db.prepare(
     `INSERT INTO api_keys (id, user_id, provider, key_encrypted, label, created_at)
      VALUES (?, ?, ?, ?, ?, ?)`
-  ).run(id, req.user!.id, provider, encrypt(key.trim()), label || null, Date.now());
+  ).run(id, req.user!.id, provider, encrypt(key), label || null, Date.now());
 
   res.json({ ok: true, id });
 });

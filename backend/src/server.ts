@@ -15,13 +15,11 @@ import systemRoutes from './routes/system';
 const app = express();
 app.disable('x-powered-by');
 
-app.use(helmet({
-  crossOriginResourcePolicy: { policy: 'cross-origin' },
-  contentSecurityPolicy: false,
-}));
+app.use(helmet({ crossOriginResourcePolicy: { policy: 'same-site' }, contentSecurityPolicy: process.env.NODE_ENV === 'production' ? undefined : false, hsts: process.env.NODE_ENV === 'production' ? undefined : false }));
 
+const allowedOrigins = (process.env.FRONTEND_URL || 'http://localhost:5173').split(',').map(origin => origin.trim());
 app.use(cors({
-  origin: (process.env.FRONTEND_URL || 'http://localhost:5173').split(','),
+  origin: (origin, callback) => !origin || allowedOrigins.includes(origin) ? callback(null, true) : callback(new Error('Origin not allowed')),
   credentials: true,
 }));
 
@@ -62,6 +60,9 @@ app.use(notFound);
 app.use(errorHandler);
 
 const PORT = parseInt(process.env.PORT || '4000', 10);
+if (process.env.NODE_ENV === 'production' && (!process.env.JWT_ACCESS_SECRET || !process.env.JWT_REFRESH_SECRET || !process.env.ENCRYPTION_KEY)) {
+  throw new Error('Production requires JWT_ACCESS_SECRET, JWT_REFRESH_SECRET, and ENCRYPTION_KEY');
+}
 app.listen(PORT, () => {
   console.log(`\n⚡ Epic Agent backend ready on http://localhost:${PORT}`);
   if (!process.env.ENCRYPTION_KEY) {
