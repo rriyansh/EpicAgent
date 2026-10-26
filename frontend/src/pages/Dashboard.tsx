@@ -242,6 +242,11 @@ export default function Dashboard() {
 
               <div className="drawer-sec">
                 <h3>Voice</h3>
+                <div className="opt-row setting-gap">
+                  {([['en-US', 'English'], ['hi-IN', 'Hindi'], ['hinglish', 'Hinglish']] as const).map(([voice_language, label]) => (
+                    <button key={voice_language} type="button" className={`opt-btn ${profile?.voice_language === voice_language ? 'active' : ''}`} onClick={() => updatePreferences({ voice_language })}>{label}</button>
+                  ))}
+                </div>
                 <select className="voice-select" value={profile?.voice || ''} onChange={e => updatePreferences({ voice: e.target.value })}>
                   <option value="">System default</option>
                   {voiceOptions.map(voice => <option key={voice.name} value={voice.name}>{voice.name} · {voice.lang}</option>)}
@@ -263,6 +268,8 @@ export default function Dashboard() {
                     </button>
                   ))}
                 </div>
+                <label className="setting-label">Creativity · {profile?.temperature?.toFixed(1) || '0.7'}</label>
+                <input className="settings-range" type="range" min="0" max="2" step="0.1" value={profile?.temperature ?? .7} onChange={e => updatePreferences({ temperature: Number(e.target.value) })} />
               </div>
 
               <div className="drawer-sec">

@@ -23,6 +23,7 @@ export interface ProfileRow {
   wallpaper: string;
   font_scale: string;
   voice: string;
+  voice_language: string;
   speed: number;
   pitch: string;
   volume: number;

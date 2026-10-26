@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS profiles (
   wallpaper TEXT NOT NULL DEFAULT 'none',
   font_scale TEXT NOT NULL DEFAULT 'medium',
   voice TEXT NOT NULL DEFAULT 'Sage',
+  voice_language TEXT NOT NULL DEFAULT 'en-US',
   speed INTEGER NOT NULL DEFAULT 2,
   pitch TEXT NOT NULL DEFAULT 'medium',
   volume INTEGER NOT NULL DEFAULT 80,
@@ -68,5 +69,6 @@ CREATE INDEX IF NOT EXISTS idx_messages_user ON messages(user_id, created_at);
 
 // Keep existing local databases compatible with the onboarding completion flow.
 try { db.exec('ALTER TABLE profiles ADD COLUMN onboarding_complete INTEGER NOT NULL DEFAULT 0'); } catch {}
+try { db.exec("ALTER TABLE profiles ADD COLUMN voice_language TEXT NOT NULL DEFAULT 'en-US'"); } catch {}
 
 export default db;

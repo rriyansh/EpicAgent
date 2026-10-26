@@ -12,6 +12,7 @@ export interface Profile {
   wallpaper: string;
   font_scale: 'small' | 'medium' | 'large' | 'xlarge';
   voice: string;
+  voice_language: 'en-US' | 'hi-IN' | 'hinglish';
   speed: number;
   pitch: 'low' | 'medium' | 'high';
   volume: number;

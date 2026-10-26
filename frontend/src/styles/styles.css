@@ -1020,6 +1020,8 @@ input, textarea, select {
 }
 
 .setting-gap { margin-top: .7rem; }
+.setting-label { display: block; margin: 1rem 0 .35rem; color: var(--text-2); font-size: .8rem; }
+.settings-range { width: 100%; accent-color: var(--accent); }
 .voice-select {
   width: 100%;
   padding: .7rem .8rem;
