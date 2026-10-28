@@ -1,0 +1,46 @@
+name = "epic-agent"
+
+[build]
+  base = "frontend"
+  publish = "dist"
+  command = "cd ../backend && npm run build && cd .. && npm run build:frontend"
+
+[build.environment]
+  NODE_VERSION = "18"
+  NODE_OPTIONS = "--max-old-space-size=4096"
+
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/server"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[functions]
+  directory = "backend/dist/functions"
+  node_bundler = "esbuild"
+
+[context.production]
+  environment = {
+    NODE_ENV = "production"
+  }
+
+[context.deploy-preview]
+  environment = {
+    NODE_ENV = "development"
+  }
+
+[[plugins]]
+  package = "@netlify/plugin-functions-at-service-root"
+
+[plugins.options]
+  functions_directory = "backend/dist"
+
+[[plugins]]
+  package = "netlify-plugin-cache" 
+  version = "1.1.0"
+  config = { paths = ["node_modules", "dist"] }

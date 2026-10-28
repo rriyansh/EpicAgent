@@ -1,0 +1,26 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "backend/src/server.ts",
+      "use": "@vercel/node",
+      "config": { "include": ["backend/src/**/*.ts", "backend/src/**/*.js"] }
+    }
+  ],
+  "routes": [
+    { "src": "/api/(.*)", "dest": "/backend/src/server.ts" },
+    { "src": "/(.*)", "dest": "/frontend/dist/$1" }
+  ],
+  "env": {
+    "PORT": "4000",
+    "NODE_ENV": "production",
+    "JWT_ACCESS_SECRET": "@jwt_access_secret",
+    "JWT_REFRESH_SECRET": "@jwt_refresh_secret",
+    "ENCRYPTION_KEY": "@encryption_key",
+    "GOOGLE_CLIENT_ID": "@google_client_id",
+    "GOOGLE_CLIENT_SECRET": "@google_client_secret",
+    "GOOGLE_REDIRECT_URI": "http://localhost:4000/api/auth/google/callback",
+    "FRONTEND_URL": "http://localhost:5173",
+    "OPENAI_API_KEY": "@openai_api_key"
+  }
+}
