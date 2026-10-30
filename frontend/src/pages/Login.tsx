@@ -44,7 +44,7 @@ export default function Login() {
       await setSession(res.access, res.refresh);
       navigate(res.needsOnboarding ? '/onboarding' : '/', { replace: true });
     } catch (err: any) {
-      setError(err.message || 'Something went wrong');
+      setError(err.message || 'Try After Sometimes');
     } finally {
       setLoading(false);
     }
