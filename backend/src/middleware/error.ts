@@ -1,13 +1,20 @@
+import { Request, Response, NextFunction } from "express";
 
-import { Response, NextFunction, Request } from 'express';
+export function errorMiddleware(
+  err: any,
+  _req: Request,
+  res: Response,
+  _next: NextFunction
+) {
+  console.error(err);
 
-export function errorHandler(err: any, _req: Request, res: Response, _next: NextFunction) {
-  const status = typeof err?.status === 'number' ? err.status : 500;
-  const message = status >= 500 ? 'Internal server error' : (err?.message || 'Error');
-  if (status >= 500) console.error('[error]', err);
-  res.status(status).json({ error: message });
+  const status = err.status ?? 500;
+  const message = err.message ?? "internal server error";
+
+  res.status(status).json({
+    error: err.code ?? "internal_error",
+    message,
+  });
 }
 
-export function notFound(_req: Request, res: Response) {
-  res.status(404).json({ error: 'Not found' });
-}
+export default errorMiddleware;

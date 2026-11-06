@@ -1,22 +1,20 @@
+import { Request, Response, NextFunction } from "express";
+import { verifyToken } from "../utils/jwt";
 
-import { Response, NextFunction } from 'express';
-import { AuthedRequest } from '../types';
-import { verifyAccess } from '../utils/jwt';
-import db from '../db';
-import { UserRow } from '../types';
+export function authMiddleware(req: Request, res: Response, next: NextFunction) {
+  const header = req.headers.authorization;
+  if (!header?.startsWith("Bearer ")) {
+    return res.status(401).json({ error: "unauthorized" });
+  }
 
-export function requireAuth(req: AuthedRequest, res: Response, next: NextFunction) {
-  const header = req.headers.authorization || '';
-  const token = header.startsWith('Bearer ') ? header.slice(7) : '';
-  if (!token) return res.status(401).json({ error: 'Missing token' });
-
+  const token = header.slice(7);
   try {
-    const payload = verifyAccess(token);
-    const user = db.prepare('SELECT * FROM users WHERE id = ?').get(payload.sub) as UserRow | undefined;
-    if (!user) return res.status(401).json({ error: 'User not found' });
-    req.user = { id: user.id, email: user.email };
+    const payload = verifyToken(token);
+    (req as any).user = payload;
     next();
   } catch {
-    return res.status(401).json({ error: 'Invalid or expired token' });
+    return res.status(401).json({ error: "invalid_token" });
   }
 }
+
+export default authMiddleware;

@@ -1,0 +1,68 @@
+name: epic-agent-prod
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: epic-agent-db-prod
+    environment:
+      POSTGRES_USER_FILE: /run/secrets/POSTGRES_USER
+      POSTGRES_PASSWORD_FILE: /run/secrets/POSTGRES_PASSWORD
+      POSTGRES_DB: epic_agent
+    secrets:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+    volumes:
+      - epic_db_data:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: epic-agent-backend-prod
+    depends_on:
+      db:
+        condition: service_started
+    environment:
+      - PORT=4000
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://epic:epic@db:5432/epic_agent
+      - JWT_SECRET_FILE=/run/secrets/JWT_SECRET
+      - JWT_EXPIRES_IN=7d
+      - ENCRYPTION_KEY_FILE=/run/secrets/ENCRYPTION_KEY
+      - LLM_PROVIDER=${LLM_PROVIDER}
+      - LLM_API_KEY_FILE=/run/secrets/LLM_API_KEY
+      - LLM_BASE_URL=${LLM_BASE_URL}
+      - LLM_MODEL=${LLM_MODEL}
+    ports:
+      - "4000:4000"
+    secrets:
+      - JWT_SECRET
+      - ENCRYPTION_KEY
+      - LLM_API_KEY
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: epic-agent-frontend-prod
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+    environment:
+      - VITE_API_BASE_URL=http://localhost:4000
+
+secrets:
+  POSTGRES_USER:
+    file: ./secrets/POSTGRES_USER
+  POSTGRES_PASSWORD:
+    file: ./secrets/POSTGRES_PASSWORD
+  JWT_SECRET:
+    file: ./secrets/JWT_SECRET
+  ENCRYPTION_KEY:
+    file: ./secrets/ENCRYPTION_KEY
+  LLM_API_KEY:
+    file: ./secrets/LLM_API_KEY
+
+volumes:
+  epic_db_data:

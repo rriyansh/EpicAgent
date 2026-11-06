@@ -1,0 +1,53 @@
+name: epic-agent
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: epic-agent-db
+    environment:
+      POSTGRES_USER: epic
+      POSTGRES_PASSWORD: epic
+      POSTGRES_DB: epic_agent
+    ports:
+      - "5432:5432"
+    volumes:
+      - epic_db_data:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: epic-agent-backend
+    depends_on:
+      db:
+        condition: service_started
+    environment:
+      - PORT=4000
+      - NODE_ENV=development
+      - DATABASE_URL=postgresql://epic:epic@db:5432/epic_agent
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRES_IN=7d
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY}
+      - LLM_PROVIDER=${LLM_PROVIDER}
+      - LLM_API_KEY=${LLM_API_KEY}
+      - LLM_BASE_URL=${LLM_BASE_URL}
+      - LLM_MODEL=${LLM_MODEL}
+    ports:
+      - "4000:4000"
+    env_file:
+      - backend/.env
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: epic-agent-frontend
+    depends_on:
+      - backend
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_BASE_URL=http://localhost:4000
+
+volumes:
+  epic_db_data:

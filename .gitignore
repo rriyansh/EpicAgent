@@ -1,10 +1,35 @@
-
+# Dependencies
 node_modules/
+.npm
+.eslintcache
+.pnpm-store
+
+# Build outputs
 dist/
+build/
+*.tsbuildinfo
+
+# Environment
 .env
-*.db
-*.db-shm
-*.db-wal
+.env.local
+.env.*.local
+backend/.env
+frontend/.env
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
 .DS_Store
-key
-keys.json
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Runtime data (backend)
+backend/data/
+
+# Docker
+.dockerignore
