@@ -18,7 +18,14 @@ export async function connectDb() {
   const client = await pool.connect();
   try {
     await client.query("SELECT 1");
-    logger.info({ database: env.DATABASE_URL.split("@").pop() }, "db connected");
+    const host = (() => {
+      try {
+        return new URL(env.DATABASE_URL).host;
+      } catch {
+        return "configured";
+      }
+    })();
+    logger.info({ host }, "db connected");
   } finally {
     client.release();
   }
@@ -28,7 +35,7 @@ export async function query(text: string, params?: unknown[]) {
   const start = Date.now();
   const res = await pool.query(text, params);
   const duration = Date.now() - start;
-  logger.debug({ text, duration, rows: res.rowCount }, "db query");
+  logger.debug({ duration, rows: res.rowCount }, "db query");
   return res;
 }
 

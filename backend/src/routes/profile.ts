@@ -1,22 +1,29 @@
 import { Router } from "express";
+import { authMiddleware, requireScope } from "../middleware/auth";
 import { asyncHandler } from "../utils/asyncHandler";
-import { authMiddleware } from "../middleware/auth";
 
 const router = Router();
 
 router.get(
   "/",
   authMiddleware,
-  asyncHandler(async (_req, res) => {
-    res.json({ profile: {} });
+  requireScope("profile:read"),
+  asyncHandler(async (req, res) => {
+    res.json({
+      profile: {
+        id: req.auth?.userId,
+        email: req.auth?.email,
+      },
+    });
   })
 );
 
 router.put(
   "/",
   authMiddleware,
-  asyncHandler(async (_req, res) => {
-    res.json({ message: "profile updated" });
+  requireScope("profile:write"),
+  asyncHandler(async (req, res) => {
+    res.json({ message: "profile updated", id: req.auth?.userId });
   })
 );
 

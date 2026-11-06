@@ -1,22 +1,24 @@
 import { Router } from "express";
+import { authMiddleware, requireScope } from "../middleware/auth";
 import { asyncHandler } from "../utils/asyncHandler";
-import { authMiddleware } from "../middleware/auth";
 
 const router = Router();
 
 router.get(
   "/sessions",
   authMiddleware,
-  asyncHandler(async (_req, res) => {
-    res.json({ sessions: [] });
+  requireScope("agent:run"),
+  asyncHandler(async (req, res) => {
+    res.json({ sessions: [], userId: req.auth?.userId });
   })
 );
 
 router.post(
   "/sessions",
   authMiddleware,
-  asyncHandler(async (_req, res) => {
-    res.json({ session: {} });
+  requireScope("agent:run"),
+  asyncHandler(async (req, res) => {
+    res.status(201).json({ session: { status: "idle", userId: req.auth?.userId } });
   })
 );
 
