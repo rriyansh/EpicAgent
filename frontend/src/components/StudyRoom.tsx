@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { initials, type Profile } from "../lib/profile";
+import { play } from "../lib/sound";
 
 type Note = { id: string; name: string; initials: string; text: string; time: string; agent?: boolean };
 
@@ -61,6 +62,7 @@ export default function StudyRoom({
       { id: crypto.randomUUID(), name: `${profile.firstName || "You"} · You`, initials: you, text, time },
     ]);
     setDraft("");
+    play("send");
     setTyping("EpicAgent is thinking…");
     window.setTimeout(() => {
       setNotes((prev) => [
@@ -75,6 +77,7 @@ export default function StudyRoom({
         },
       ]);
       setTyping("");
+      play("reply");
     }, 700);
   }
 

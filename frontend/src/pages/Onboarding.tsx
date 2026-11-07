@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Mascot from "../components/Mascot";
+import { play } from "../lib/sound";
 import type { Profile } from "../lib/profile";
 
 const FORM_STEPS = ["name", "birthday", "permissions", "agent"] as const;
@@ -55,6 +56,7 @@ export default function Onboarding({
   }
 
   function next() {
+    play("tap");
     setError("");
     if (step === "welcome") return setStep("name");
     if (step === "name") {
@@ -119,7 +121,7 @@ export default function Onboarding({
   return (
     <div className="onboard">
       <div className="onboard-hero">
-        <Mascot />
+        <Mascot talking={step === "welcome" || step === "ready"} />
       </div>
       <section className="onboard-sheet" onKeyDown={onKeyDown}>
         {formIndex >= 0 && (

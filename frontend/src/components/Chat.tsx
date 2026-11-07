@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { displayName, initials, type Profile } from "../lib/profile";
+import { play } from "../lib/sound";
 
 type Msg = { id: string; role: "user" | "agent"; text: string; time: string };
 
@@ -80,6 +81,8 @@ export default function Chat({
     };
     setThreads((prev) => ({ ...prev, [active]: [...(prev[active] ?? []), user, reply] }));
     setDraft("");
+    play("send");
+    window.setTimeout(() => play("reply"), 280);
   }
 
   const sendRef = useRef(send);

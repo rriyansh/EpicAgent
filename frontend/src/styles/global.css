@@ -787,7 +787,82 @@ button:focus-visible, input:focus-visible, select:focus-visible {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: none; }
 }
+.sound-btn {
+  position: fixed;
+  top: 14px;
+  right: 14px;
+  z-index: 40;
+  border: 0;
+  background: #fff;
+  color: #171924;
+  border-radius: 999px;
+  padding: 8px 12px;
+  font-weight: 700;
+  box-shadow: var(--shadow);
+}
+.mascot { overflow: visible; }
+.mascot .agent,
+.mascot .head,
+.mascot .arm,
+.mascot .leg,
+.mascot .pupil,
+.mascot .lid,
+.mascot .mouth,
+.mascot .shadow { transform-box: fill-box; }
+.mascot .agent { transform-origin: center bottom; animation: agent-breathe 3.4s ease-in-out infinite; }
+.mascot .head { transform-origin: center bottom; animation: head-tilt 5.5s ease-in-out infinite; }
+.mascot .pupil { transform-origin: center; animation: eye-look 5.5s ease-in-out infinite; }
+.mascot .lid { transform-origin: center; animation: blink 4.6s infinite; }
+.mascot .arm.left { transform-origin: right center; animation: arm-rest 3.4s ease-in-out infinite; }
+.mascot .arm.right { transform-origin: left center; animation: arm-wave 2.2s ease-in-out infinite; }
+.mascot .leg { transform-origin: center top; }
+.mascot .leg.left { animation: step 1.8s ease-in-out infinite; }
+.mascot .leg.right { animation: step 1.8s ease-in-out infinite reverse; }
+.mascot .mouth { transform-origin: center; }
+.mascot.talking .mouth { animation: talk 0.22s ease-in-out infinite; }
+.mascot .shadow { transform-origin: center; animation: shadow-pulse 3.4s ease-in-out infinite; }
+@keyframes agent-breathe {
+  0%, 100% { transform: translateY(0) scale(1, 1); }
+  50% { transform: translateY(-4px) scale(1.03, 0.97); }
+}
+@keyframes head-tilt {
+  0%, 100% { transform: rotate(0deg); }
+  35% { transform: rotate(-7deg); }
+  70% { transform: rotate(6deg); }
+}
+@keyframes eye-look {
+  0%, 100% { transform: translate(0, 0); }
+  35% { transform: translate(-2px, 0); }
+  70% { transform: translate(2px, 1px); }
+}
+@keyframes blink {
+  0%, 46%, 52%, 100% { transform: scaleY(0.05); }
+  48%, 50% { transform: scaleY(1); }
+}
+@keyframes arm-wave {
+  0%, 100% { transform: rotate(14deg); }
+  50% { transform: rotate(-24deg); }
+}
+@keyframes arm-rest {
+  0%, 100% { transform: rotate(8deg); }
+  50% { transform: rotate(-6deg); }
+}
+@keyframes step {
+  0%, 100% { transform: rotate(5deg); }
+  50% { transform: rotate(-5deg); }
+}
+@keyframes talk {
+  50% { transform: scaleY(0.4) translateY(1px); }
+}
+@keyframes shadow-pulse {
+  50% { transform: scaleX(0.8); opacity: 0.08; }
+}
 @media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
   *, *::before, *::after {
     animation: none !important;
     transition: none !important;

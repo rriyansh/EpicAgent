@@ -3,7 +3,9 @@ import Login from "./pages/Login";
 import Onboarding from "./pages/Onboarding";
 import Dashboard from "./pages/Dashboard";
 import Mascot from "./components/Mascot";
+import SoundToggle from "./components/SoundToggle";
 import { clearSession, readSession } from "./hooks/useAuth";
+import { play } from "./lib/sound";
 import { loadProfile, saveProfile, type Profile, type ThemeMode } from "./lib/profile";
 
 type View = "splash" | "login" | "onboarding" | "app";
@@ -49,6 +51,7 @@ export default function App() {
 
   return (
     <div className="app">
+      <SoundToggle />
       <div key={view} className="view-in">
       {view === "splash" ? (
         <Splash />
@@ -93,9 +96,14 @@ export default function App() {
 }
 
 function Splash() {
+  useEffect(() => {
+    const timer = window.setTimeout(() => play("hello"), 280);
+    return () => window.clearTimeout(timer);
+  }, []);
+
   return (
     <div className="splash" role="status" aria-live="polite">
-      <Mascot />
+      <Mascot talking />
       <p className="splash-title">
         EpicAgent
         <span className="dots" aria-hidden="true">
