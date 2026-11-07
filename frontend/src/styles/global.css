@@ -255,8 +255,48 @@ img { max-width: 100%; }
 }
 .step-meta { display: flex; align-items: center; gap: 8px; color: var(--muted); font-weight: 600; }
 .bars { display: flex; gap: 4px; }
-.bars b { width: 18px; height: 4px; border-radius: 99px; background: #d9e3dc; display: block; }
-.bars b.on { background: var(--green); }
+.bars b, .bars button { width: 18px; height: 4px; border-radius: 99px; background: #d9e3dc; display: block; border: 0; padding: 0; }
+.bars b.on, .bars button.on { background: var(--green); }
+.agent-say {
+  margin: 12px 0 14px;
+  background: var(--soft);
+  color: var(--ink);
+  border-radius: 16px 16px 16px 6px;
+  padding: 12px 14px;
+  line-height: 1.45;
+  min-height: 46px;
+}
+.caret {
+  display: inline-block;
+  width: 8px;
+  height: 1em;
+  margin-left: 2px;
+  border-right: 2px solid var(--green);
+  animation: agent-type 0.8s steps(1) infinite;
+}
+.sheet-in { animation: sheet-in 0.28s ease; }
+@keyframes sheet-in {
+  from { opacity: 0; transform: translateY(8px); }
+}
+.month-picks { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; margin-bottom: 12px; }
+.month-picks button, .job-picks button {
+  border: 1px solid var(--line);
+  background: var(--field);
+  border-radius: 12px;
+  padding: 8px 4px;
+  font-weight: 700;
+}
+.month-picks button.on, .job-picks button.on { background: var(--green); color: #fff; border-color: var(--green); }
+.job-picks { display: grid; gap: 8px; margin-bottom: 8px; }
+.job-picks button { text-align: left; padding: 12px 14px; background: var(--surface); }
+.job-picks button.on { background: var(--soft); color: var(--ink); }
+.job-picks strong, .job-picks small { display: block; }
+.job-picks small { font-weight: 500; color: var(--muted); margin-top: 2px; }
+.job-picks button.on small { color: var(--green-2); }
+.dob-grid.two { grid-template-columns: 1fr 1fr; }
+@media (max-width: 420px) {
+  .month-picks { grid-template-columns: repeat(4, 1fr); }
+}
 .dob-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
 .field-label { margin: 0 0 8px; font-weight: 700; }
 .fine { color: var(--muted); font-size: 13px; line-height: 1.45; margin: 4px 0 12px; }
