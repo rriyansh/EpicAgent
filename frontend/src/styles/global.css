@@ -13,7 +13,8 @@
   --danger: #d14343;
   --shadow: 0 16px 40px rgba(23, 25, 36, 0.08);
   --sidebar: 248px;
-  --font: "Plus Jakarta Sans", "Segoe UI", sans-serif;
+  --font: "DM Sans", "Google Sans", sans-serif;
+  --display: "Google Sans", "DM Sans", sans-serif;
   color-scheme: light;
 }
 
@@ -41,6 +42,7 @@ body {
   background: var(--bg);
   color: var(--ink);
 }
+h1, h2, h3, .brand { font-family: var(--display); letter-spacing: -0.03em; }
 button, input, select { font: inherit; color: inherit; }
 button { cursor: pointer; }
 img { max-width: 100%; }
@@ -55,10 +57,10 @@ img { max-width: 100%; }
   border: 0;
 }
 
-.app { min-height: 100%; }
-
+.app { min-height: 100dvh; width: 100%; }
 .auth-screen {
-  min-height: 100%;
+  min-height: 100dvh;
+  width: 100%;
   display: grid;
   place-items: center;
   padding: 24px 16px;
