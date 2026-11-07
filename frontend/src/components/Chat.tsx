@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { displayName, initials, type Profile } from "../lib/profile";
 
 type Msg = { id: string; role: "user" | "agent"; text: string; time: string };
@@ -35,7 +35,19 @@ function nowLabel() {
   return new Date().toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
 }
 
-export default function Chat({ profile }: { profile: Profile }) {
+export default function Chat({
+  profile,
+  signedIn,
+  queued,
+  onNeedLogin,
+  onQueueDone,
+}: {
+  profile: Profile;
+  signedIn: boolean;
+  queued: string;
+  onNeedLogin: (text: string) => void;
+  onQueueDone: () => void;
+}) {
   const [threadsList, setThreadsList] = useState(SEED_THREADS);
   const [active, setActive] = useState(SEED_THREADS[0].id);
   const [draft, setDraft] = useState("");
@@ -53,6 +65,11 @@ export default function Chat({ profile }: { profile: Profile }) {
   function send(text: string) {
     const clean = text.trim();
     if (!clean) return;
+    if (!signedIn) {
+      setDraft(clean);
+      onNeedLogin(clean);
+      return;
+    }
     const time = nowLabel();
     const user: Msg = { id: crypto.randomUUID(), role: "user", text: clean, time };
     const reply: Msg = {
@@ -64,6 +81,14 @@ export default function Chat({ profile }: { profile: Profile }) {
     setThreads((prev) => ({ ...prev, [active]: [...(prev[active] ?? []), user, reply] }));
     setDraft("");
   }
+
+  const sendRef = useRef(send);
+  sendRef.current = send;
+  useEffect(() => {
+    if (!signedIn || !queued) return;
+    sendRef.current(queued);
+    onQueueDone();
+  }, [signedIn, queued, onQueueDone]);
 
   function fresh() {
     const id = `new-${Date.now()}`;

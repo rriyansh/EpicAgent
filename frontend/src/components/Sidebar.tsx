@@ -12,11 +12,15 @@ export default function Sidebar({
   tab,
   onTab,
   profile,
+  signedIn,
+  onSignIn,
   onSignOut,
 }: {
   tab: Tab;
   onTab: (tab: Tab) => void;
   profile: Profile;
+  signedIn: boolean;
+  onSignIn: () => void;
   onSignOut: () => void;
 }) {
   return (
@@ -49,11 +53,11 @@ export default function Sidebar({
         <div className="account">
           <span className="avatar">{initials(profile)}</span>
           <span>
-            <strong>{displayName(profile)}</strong>
-            <small>Personal account</small>
+            <strong>{signedIn ? displayName(profile) : "Guest"}</strong>
+            <small>{signedIn ? "Personal account" : "Look around, then sign in"}</small>
           </span>
-          <button type="button" className="text-link" onClick={onSignOut}>
-            Sign out
+          <button type="button" className="text-link" onClick={signedIn ? onSignOut : onSignIn}>
+            {signedIn ? "Sign out" : "Sign in"}
           </button>
         </div>
       </aside>

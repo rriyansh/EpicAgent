@@ -2,11 +2,15 @@ import { dobLabel, type Profile, type ThemeMode } from "../lib/profile";
 
 export default function SettingsPanel({
   profile,
+  signedIn,
   onChange,
+  onSignIn,
   onSignOut,
 }: {
   profile: Profile;
+  signedIn: boolean;
   onChange: (profile: Profile) => void;
+  onSignIn: () => void;
   onSignOut: () => void;
 }) {
   function patch(partial: Partial<Profile>) {
@@ -133,8 +137,8 @@ export default function SettingsPanel({
         </section>
         <div className="settings-foot">
           <p>Your personal details are only visible to you.</p>
-          <button type="button" className="signout" onClick={onSignOut}>
-            Sign out
+          <button type="button" className="signout" onClick={signedIn ? onSignOut : onSignIn}>
+            {signedIn ? "Sign out" : "Sign in"}
           </button>
         </div>
       </div>

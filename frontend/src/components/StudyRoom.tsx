@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { initials, type Profile } from "../lib/profile";
 
 type Note = { id: string; name: string; initials: string; text: string; time: string; agent?: boolean };
@@ -35,17 +35,26 @@ const START: Note[] = [
   },
 ];
 
-export default function StudyRoom({ profile }: { profile: Profile }) {
+export default function StudyRoom({
+  profile,
+  signedIn,
+  queued,
+  onNeedLogin,
+  onQueueDone,
+}: {
+  profile: Profile;
+  signedIn: boolean;
+  queued: string;
+  onNeedLogin: (text: string) => void;
+  onQueueDone: () => void;
+}) {
   const [notes, setNotes] = useState(START);
   const [draft, setDraft] = useState("");
   const [typing, setTyping] = useState("Sofia is typing…");
   const [invited, setInvited] = useState(false);
   const you = initials(profile);
 
-  function send(e: React.FormEvent) {
-    e.preventDefault();
-    const text = draft.trim();
-    if (!text) return;
+  function post(text: string) {
     const time = new Date().toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
     setNotes((prev) => [
       ...prev,
@@ -68,6 +77,25 @@ export default function StudyRoom({ profile }: { profile: Profile }) {
       setTyping("");
     }, 700);
   }
+
+  function send(e: React.FormEvent) {
+    e.preventDefault();
+    const text = draft.trim();
+    if (!text) return;
+    if (!signedIn) {
+      onNeedLogin(text);
+      return;
+    }
+    post(text);
+  }
+
+  const postRef = useRef(post);
+  postRef.current = post;
+  useEffect(() => {
+    if (!signedIn || !queued) return;
+    postRef.current(queued);
+    onQueueDone();
+  }, [signedIn, queued, onQueueDone]);
 
   return (
     <section className="workspace study-view">

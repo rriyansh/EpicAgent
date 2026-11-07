@@ -2,9 +2,12 @@ import { useEffect, useState } from "react";
 import Login from "./pages/Login";
 import Onboarding from "./pages/Onboarding";
 import Dashboard from "./pages/Dashboard";
+import Mascot from "./components/Mascot";
+import { clearSession, readSession } from "./hooks/useAuth";
 import { loadProfile, saveProfile, type Profile, type ThemeMode } from "./lib/profile";
 
-type View = "login" | "onboarding" | "app";
+type View = "splash" | "login" | "onboarding" | "app";
+type Pending = { tab: "chat" | "study"; text: string } | null;
 
 function applyTheme(theme: ThemeMode) {
   const dark =
@@ -15,7 +18,16 @@ function applyTheme(theme: ThemeMode) {
 
 export default function App() {
   const [profile, setProfile] = useState<Profile>(() => loadProfile());
-  const [view, setView] = useState<View>(() => (loadProfile().done ? "app" : "login"));
+  const [view, setView] = useState<View>("splash");
+  const [signedIn, setSignedIn] = useState(() => Boolean(readSession()));
+  const [pending, setPending] = useState<Pending>(null);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setView((current) => (current === "splash" ? (loadProfile().done ? "app" : "onboarding") : current));
+    }, 1600);
+    return () => window.clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     applyTheme(profile.theme);
@@ -30,12 +42,20 @@ export default function App() {
     saveProfile(next);
   }
 
+  function openLogin(next: Pending) {
+    setPending(next);
+    setView("login");
+  }
+
   return (
     <div className="app">
-      {view === "login" ? (
+      {view === "splash" ? (
+        <Splash />
+      ) : view === "login" ? (
         <Login
           onSuccess={(email) => {
             updateProfile({ ...profile, email: email || profile.email });
+            setSignedIn(Boolean(readSession()));
             setView(profile.done ? "app" : "onboarding");
           }}
         />
@@ -43,7 +63,7 @@ export default function App() {
         <Onboarding
           profile={profile}
           onChange={updateProfile}
-          onBack={() => setView("login")}
+          onBack={() => setView("app")}
           onFinish={(next) => {
             updateProfile({ ...next, done: true });
             setView("app");
@@ -52,13 +72,37 @@ export default function App() {
       ) : (
         <Dashboard
           profile={profile}
+          signedIn={signedIn}
+          pending={pending}
+          onPendingDone={() => setPending(null)}
           onChange={updateProfile}
+          onNeedLogin={openLogin}
+          onSignIn={() => setView("login")}
           onSignOut={() => {
-            updateProfile({ ...profile, done: false });
-            setView("login");
+            clearSession();
+            setSignedIn(false);
+            setPending(null);
+            setView("app");
           }}
         />
       )}
+    </div>
+  );
+}
+
+function Splash() {
+  return (
+    <div className="splash" role="status" aria-live="polite">
+      <Mascot />
+      <p className="splash-title">
+        EpicAgent
+        <span className="dots" aria-hidden="true">
+          <i />
+          <i />
+          <i />
+        </span>
+      </p>
+      <p className="splash-note">Getting your study space ready</p>
     </div>
   );
 }
