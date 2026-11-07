@@ -49,6 +49,7 @@ export default function App() {
 
   return (
     <div className="app">
+      <div key={view} className="view-in">
       {view === "splash" ? (
         <Splash />
       ) : view === "login" ? (
@@ -86,6 +87,7 @@ export default function App() {
           }}
         />
       )}
+      </div>
     </div>
   );
 }

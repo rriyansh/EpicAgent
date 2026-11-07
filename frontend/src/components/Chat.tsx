@@ -159,7 +159,7 @@ export default function Chat({
           <p className="day-chip">Today, October 28</p>
           {messages.map((msg) =>
             msg.role === "user" ? (
-              <article key={msg.id} className="bubble user">
+              <article key={msg.id} className="bubble user rise">
                 <p>{msg.text}</p>
                 <footer>
                   <time>{msg.time}</time>
@@ -167,7 +167,7 @@ export default function Chat({
                 </footer>
               </article>
             ) : (
-              <article key={msg.id} className="agent-block">
+              <article key={msg.id} className="agent-block rise">
                 <header>
                   <span className="agent-badge">
                     <Shield />

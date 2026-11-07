@@ -708,14 +708,18 @@ button:focus-visible, input:focus-visible, select:focus-visible {
   .tabbar button.active { background: var(--soft); color: var(--green); }
   .chat-layout { grid-template-columns: 1fr; }
   .thread-list {
-    display: none;
+    display: flex;
+    flex-direction: column;
     position: fixed;
     inset: 0 0 calc(68px + env(safe-area-inset-bottom)) 0;
     background: var(--surface);
     z-index: 15;
     padding: 16px;
+    transform: translateY(104%);
+    transition: transform 0.32s ease;
+    pointer-events: none;
   }
-  .thread-list.open { display: block; }
+  .thread-list.open { transform: none; pointer-events: auto; }
   .close-list { display: inline-flex; }
   .mobile-only { display: inline-flex; }
   .topbar, .transcript, .settings-body { padding-left: 16px; padding-right: 16px; }
@@ -760,4 +764,32 @@ button:focus-visible, input:focus-visible, select:focus-visible {
 @media (min-width: 1440px) {
   .transcript { padding-inline: max(28px, calc((100% - 860px) / 2)); }
   .settings-body { margin-inline: auto; }
+}
+
+.view-in { min-height: 100dvh; animation: view-in 0.45s ease; }
+.auth-card, .onboard-sheet { animation: rise 0.5s ease both; }
+.splash .mascot { animation: agent-float 1.6s ease-in-out infinite, rise 0.5s ease both; }
+.workspace { animation: view-in 0.32s ease; }
+.rise, .plan-card, .card, .focus-card, .side-block { animation: rise 0.4s ease both; }
+.bubble.user.rise { animation-duration: 0.28s; }
+.nav button, .tabbar button, .thread, .btn-primary, .btn-quiet, .suggestions button, .month-picks button, .job-picks button {
+  transition: background 0.2s ease, color 0.2s ease, transform 0.18s ease, border-color 0.2s ease;
+}
+.btn-primary:active, .send:active, .tabbar button:active { transform: scale(0.97); }
+.composer { transition: box-shadow 0.2s ease, border-color 0.2s ease; }
+.composer:focus-within { border-color: var(--green); box-shadow: 0 0 0 3px rgba(28, 122, 56, 0.15); }
+.switch { transition: background 0.2s ease; }
+@keyframes view-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+  }
 }

@@ -128,7 +128,7 @@ export default function StudyRoom({
           </div>
           <p className="day-chip">Today, October 28</p>
           {notes.map((note) => (
-            <article key={note.id} className={note.agent ? "room-note agent" : "room-note"}>
+            <article key={note.id} className={note.agent ? "room-note agent rise" : "room-note rise"}>
               <span className={`avatar ${note.agent ? "agent" : ""}`}>{note.agent ? <Shield /> : note.initials}</span>
               <div>
                 <header>
