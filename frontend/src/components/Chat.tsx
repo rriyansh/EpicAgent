@@ -129,6 +129,7 @@ export default function Chat({ profile }: { profile: Profile }) {
           </button>
         </aside>
 
+        <div className="pane">
         <div className="transcript">
           <p className="day-chip">Today, October 28</p>
           {messages.map((msg) =>
@@ -173,6 +174,7 @@ export default function Chat({ profile }: { profile: Profile }) {
               ))}
             </div>
           )}
+          </div>
           <form
             className="composer"
             onSubmit={(e) => {

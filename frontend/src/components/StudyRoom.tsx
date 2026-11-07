@@ -93,7 +93,8 @@ export default function StudyRoom({ profile }: { profile: Profile }) {
       {invited && <p className="banner">Invite link copied for this room. Only people you add can join.</p>}
 
       <div className="study-grid">
-        <div className="room-stream">
+        <div className="room-stream pane">
+          <div className="room-feed">
           <div className="goal">
             <Pin /> Today’s goal: understand mitosis vs. meiosis
           </div>
@@ -123,6 +124,7 @@ export default function StudyRoom({ profile }: { profile: Profile }) {
             </article>
           ))}
           {typing && <p className="typing">{typing}</p>}
+          </div>
           <form className="composer" onSubmit={send}>
             <span className="clip" aria-hidden="true">
               <Clip />
